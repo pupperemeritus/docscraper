@@ -1,0 +1,24 @@
+root_url: "https://www.orekit.org/site-orekit-13.0.3/apidocs/"
+output_format: "markdown"
+output_type: "single"
+output_dir: "output"
+min_delay: 2
+max_delay: 4
+max_depth: 2
+respect_robots: false
+log_file: "scraper.log"
+verbose: true
+user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+# Optional proxy configuration (leave empty to disable)
+# Supports HTTP/HTTPS and SOCKS5 proxies
+# proxies:
+#   - "http://proxy1.example.com:8080"
+#   - "http://user:pass@proxy2.example.com:8080"
+#   - "socks5://127.0.0.1:1080"
+
+# Optional advanced settings (uncomment to enable)
+# concurrent_requests: 2        # Number of concurrent requests per domain
+# request_timeout: 30          # Request timeout in seconds
+# retry_attempts: 3            # Number of retry attempts for failed requests
+# ignore_ssl_errors: false     # Skip SSL certificate verification

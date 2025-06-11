@@ -1,0 +1,66 @@
+# Advanced Go Documentation Scraper Configuration
+# This configuration file demonstrates all the advanced features
+
+# Basic Configuration
+root_url: "https://pkg.go.dev/net/http"
+output_format: "markdown" # Options: markdown, text, json
+output_type: "per-page" # Options: single, per-page
+output_dir: "./scraped_docs"
+
+# Scraping Behavior
+max_depth: 3
+min_delay: 1
+max_delay: 3
+respect_robots: true
+verbose: true
+log_file: "scraper.log"
+
+# User Agents (random selection)
+user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+
+# Advanced Features (Enable/Disable)
+use_hierarchical_ordering: true # Organize output hierarchically based on URL structure
+enable_deduplication: true # Prevent scraping duplicate URLs
+enable_quality_analysis: true # Analyze and filter content by quality
+enable_devtools: true # Enable development and debugging tools
+
+# Deduplication Configuration
+deduplication:
+    remove_fragments: true # Remove URL fragments (#section)
+    remove_query_params: false # Keep query parameters (?param=value)
+    ignore_case: true # Ignore case differences in URLs
+    ignore_www: true # Treat www.example.com same as example.com
+    ignore_trailing_slash: true # Treat /path same as /path/
+
+# Content Quality Analysis
+quality_analysis:
+    min_score: 0.6 # Minimum quality score (0.0-1.0)
+    min_word_count: 100 # Minimum word count for content
+    require_title: true # Skip pages without titles
+    require_content: true # Skip pages with minimal content
+    skip_navigation: true # Skip navigation/index pages
+    filter_by_language: "en" # Filter by detected language (empty = no filter)
+    blacklisted_patterns: # Skip pages containing these patterns
+        - "404"
+        - "not found"
+        - "error"
+        - "maintenance"
+
+# Development Tools Configuration
+devtools:
+    enable_debug_mode: true # Enable detailed debug logging
+    enable_dry_run: false # Dry run mode (simulate without scraping)
+    enable_profiling: true # Enable performance profiling
+    enable_progress_bar: true # Show progress during scraping
+    validation_level: "strict" # Configuration validation: strict, normal, relaxed
+    save_performance_report: true # Save performance report to file
+
+# Optional Advanced Settings
+concurrent_requests: 2 # Number of concurrent requests
+
+# Proxy Configuration (optional)
+# proxies:
+#   - "http://proxy1.example.com:8080"
+#   - "socks5://proxy2.example.com:1080"
