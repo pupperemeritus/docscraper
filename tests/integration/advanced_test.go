@@ -1,4 +1,4 @@
-package integration_advanced
+package integration_test
 
 import (
 	"os"
@@ -104,8 +104,6 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 		limitedCfg := *cfg
 		limitedCfg.MaxDepth = 1 // Limit depth for faster testing
 
-		enhancedScraper.Scraper.SetConfig(&limitedCfg)
-
 		// Note: For integration test, we'll simulate the scraping with mock data
 		// instead of actual HTTP requests to avoid external dependencies
 		mockPages := []scraper.PageData{
@@ -164,7 +162,13 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 
 		// Test quality analysis
 		t.Run("Quality Analysis", func(t *testing.T) {
-			analyzer := scraper.NewContentQualityAnalyzer(cfg.QualityAnalysis)
+			qualityConfig := scraper.QualityConfig{
+				MinWordCount:        10,
+				RequireTitle:        true,
+				RequireContent:      true,
+				SkipNavigationPages: true,
+			}
+			analyzer := scraper.NewContentQualityAnalyzer(qualityConfig)
 			
 			scrapedContent := scraper.ScrapedContent{
 				URL:     "https://httpbin.org/test",

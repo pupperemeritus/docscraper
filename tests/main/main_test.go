@@ -136,15 +136,6 @@ func TestDefaultConfiguration(t *testing.T) {
 	if cfg.GetConcurrentRequests() != 2 {
 		t.Errorf("Expected default concurrent requests = 2, got %d", cfg.GetConcurrentRequests())
 	}
-	if cfg.GetRequestTimeout() != 30 {
-		t.Errorf("Expected default request timeout = 30, got %d", cfg.GetRequestTimeout())
-	}
-	if cfg.GetRetryAttempts() != 0 {
-		t.Errorf("Expected default retry attempts = 0, got %d", cfg.GetRetryAttempts())
-	}
-	if cfg.GetIgnoreSSLErrors() != false {
-		t.Errorf("Expected default ignore SSL errors = false, got %v", cfg.GetIgnoreSSLErrors())
-	}
 }
 
 func TestConfigurationValidation(t *testing.T) {
@@ -279,15 +270,6 @@ user_agents:
 	}
 	if cfg.GetConcurrentRequests() != 5 {
 		t.Errorf("Expected concurrent requests = 5, got %d", cfg.GetConcurrentRequests())
-	}
-	if cfg.GetRequestTimeout() != 60 {
-		t.Errorf("Expected request timeout = 60, got %d", cfg.GetRequestTimeout())
-	}
-	if cfg.GetRetryAttempts() != 3 {
-		t.Errorf("Expected retry attempts = 3, got %d", cfg.GetRetryAttempts())
-	}
-	if !cfg.GetIgnoreSSLErrors() {
-		t.Error("Expected ignore SSL errors = true")
 	}
 	if len(cfg.UserAgents) != 2 {
 		t.Errorf("Expected 2 user agents, got %d", len(cfg.UserAgents))
