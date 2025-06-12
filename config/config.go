@@ -13,45 +13,45 @@ import (
 // Config represents the application configuration
 type Config struct {
 	RootURL       string   `yaml:"root_url" json:"root_url"`
-	OutputFormat  string   `yaml:"output_format" json:"output_format"`     // "markdown", "text", "json"
-	OutputType    string   `yaml:"output_type" json:"output_type"`         // "single", "per-page"
+	OutputFormat  string   `yaml:"output_format" json:"output_format"` // "markdown", "text", "json"
+	OutputType    string   `yaml:"output_type" json:"output_type"`     // "single", "per-page"
 	OutputDir     string   `yaml:"output_dir" json:"output_dir"`
 	UserAgents    []string `yaml:"user_agents" json:"user_agents"`
-	MinDelay      int      `yaml:"min_delay" json:"min_delay"`             // seconds
-	MaxDelay      int      `yaml:"max_delay" json:"max_delay"`             // seconds
+	MinDelay      int      `yaml:"min_delay" json:"min_delay"` // seconds
+	MaxDelay      int      `yaml:"max_delay" json:"max_delay"` // seconds
 	MaxDepth      int      `yaml:"max_depth" json:"max_depth"`
 	RespectRobots bool     `yaml:"respect_robots" json:"respect_robots"`
 	LogFile       string   `yaml:"log_file" json:"log_file"`
 	Verbose       bool     `yaml:"verbose" json:"verbose"`
-	
+
 	// Optional proxy configuration
-	Proxies       []string `yaml:"proxies" json:"proxies"`                 // HTTP/SOCKS5 proxy URLs
-	
+	Proxies []string `yaml:"proxies" json:"proxies"` // HTTP/SOCKS5 proxy URLs
+
 	// Optional advanced settings with sensible defaults
 	ConcurrentRequests *int `yaml:"concurrent_requests" json:"concurrent_requests"` // nil means use default (2)
-	
+
 	// Advanced Features
-	UseHierarchicalOrdering *bool              `yaml:"use_hierarchical_ordering" json:"use_hierarchical_ordering"` // Enable hierarchical output organization
-	EnableDeduplication     *bool              `yaml:"enable_deduplication" json:"enable_deduplication"`           // Enable duplicate link detection
-	EnableQualityAnalysis   *bool              `yaml:"enable_quality_analysis" json:"enable_quality_analysis"`     // Enable content quality analysis
-	EnableDevTools          *bool              `yaml:"enable_devtools" json:"enable_devtools"`                     // Enable development tools
-	
+	UseHierarchicalOrdering *bool `yaml:"use_hierarchical_ordering" json:"use_hierarchical_ordering"` // Enable hierarchical output organization
+	EnableDeduplication     *bool `yaml:"enable_deduplication" json:"enable_deduplication"`           // Enable duplicate link detection
+	EnableQualityAnalysis   *bool `yaml:"enable_quality_analysis" json:"enable_quality_analysis"`     // Enable content quality analysis
+	EnableDevTools          *bool `yaml:"enable_devtools" json:"enable_devtools"`                     // Enable development tools
+
 	// Deduplication Settings
 	Deduplication DeduplicationConfig `yaml:"deduplication" json:"deduplication"`
-	
+
 	// Quality Analysis Settings
 	QualityAnalysis QualityConfig `yaml:"quality_analysis" json:"quality_analysis"`
-	
+
 	// DevTools Settings
 	DevTools DevToolsConfig `yaml:"devtools" json:"devtools"`
 }
 
 // DeduplicationConfig configures duplicate link detection
 type DeduplicationConfig struct {
-	RemoveFragments    bool `yaml:"remove_fragments" json:"remove_fragments"`       // Remove URL fragments (#section)
-	RemoveQueryParams  bool `yaml:"remove_query_params" json:"remove_query_params"` // Remove query parameters (?param=value)
-	IgnoreCase         bool `yaml:"ignore_case" json:"ignore_case"`                 // Ignore case in URLs
-	IgnoreWWW          bool `yaml:"ignore_www" json:"ignore_www"`                   // Ignore www prefix
+	RemoveFragments     bool `yaml:"remove_fragments" json:"remove_fragments"`           // Remove URL fragments (#section)
+	RemoveQueryParams   bool `yaml:"remove_query_params" json:"remove_query_params"`     // Remove query parameters (?param=value)
+	IgnoreCase          bool `yaml:"ignore_case" json:"ignore_case"`                     // Ignore case in URLs
+	IgnoreWWW           bool `yaml:"ignore_www" json:"ignore_www"`                       // Ignore www prefix
 	IgnoreTrailingSlash bool `yaml:"ignore_trailing_slash" json:"ignore_trailing_slash"` // Ignore trailing slashes
 }
 
@@ -68,12 +68,12 @@ type QualityConfig struct {
 
 // DevToolsConfig configures development tools
 type DevToolsConfig struct {
-	EnableDebugMode     bool   `yaml:"enable_debug_mode" json:"enable_debug_mode"`         // Enable debug logging
-	EnableDryRun        bool   `yaml:"enable_dry_run" json:"enable_dry_run"`               // Enable dry run mode
-	EnableProfiling     bool   `yaml:"enable_profiling" json:"enable_profiling"`           // Enable performance profiling
-	EnableProgressBar   bool   `yaml:"enable_progress_bar" json:"enable_progress_bar"`     // Enable progress tracking
-	ValidationLevel     string `yaml:"validation_level" json:"validation_level"`           // "strict", "normal", "relaxed"
-	SavePerformanceReport bool `yaml:"save_performance_report" json:"save_performance_report"` // Save performance report to file
+	EnableDebugMode       bool   `yaml:"enable_debug_mode" json:"enable_debug_mode"`             // Enable debug logging
+	EnableDryRun          bool   `yaml:"enable_dry_run" json:"enable_dry_run"`                   // Enable dry run mode
+	EnableProfiling       bool   `yaml:"enable_profiling" json:"enable_profiling"`               // Enable performance profiling
+	EnableProgressBar     bool   `yaml:"enable_progress_bar" json:"enable_progress_bar"`         // Enable progress tracking
+	ValidationLevel       string `yaml:"validation_level" json:"validation_level"`               // "strict", "normal", "relaxed"
+	SavePerformanceReport bool   `yaml:"save_performance_report" json:"save_performance_report"` // Save performance report to file
 }
 
 // DefaultUserAgents provides a list of common user agents

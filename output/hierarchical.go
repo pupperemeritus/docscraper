@@ -16,16 +16,16 @@ import (
 
 // DocumentNode represents a node in the documentation tree (local copy to avoid import cycle)
 type DocumentNode struct {
-	URL      string            `json:"url"`
-	Path     string            `json:"path"`
-	Title    string            `json:"title"`
-	Content  string            `json:"content,omitempty"`
-	Depth    int               `json:"depth"`
-	Level    int               `json:"level"`
-	Parent   *DocumentNode     `json:"-"`
-	Children []*DocumentNode   `json:"children"`
-	Index    int               `json:"index"`
-	Timestamp time.Time        `json:"timestamp"`
+	URL       string          `json:"url"`
+	Path      string          `json:"path"`
+	Title     string          `json:"title"`
+	Content   string          `json:"content,omitempty"`
+	Depth     int             `json:"depth"`
+	Level     int             `json:"level"`
+	Parent    *DocumentNode   `json:"-"`
+	Children  []*DocumentNode `json:"children"`
+	Index     int             `json:"index"`
+	Timestamp time.Time       `json:"timestamp"`
 }
 
 // DocumentTree represents the complete documentation tree structure (local copy)
@@ -130,8 +130,8 @@ func findParentNode(node *DocumentNode, allNodes []*DocumentNode) *DocumentNode 
 
 		if strings.HasPrefix(node.Path, candidate.Path) && len(candidate.Path) > maxMatchLength {
 			// Additional check: ensure it's actually a parent path, not just a prefix
-			if node.Path == candidate.Path+"/" || 
-			   (len(node.Path) > len(candidate.Path) && node.Path[len(candidate.Path)] == '/') {
+			if node.Path == candidate.Path+"/" ||
+				(len(node.Path) > len(candidate.Path) && node.Path[len(candidate.Path)] == '/') {
 				bestParent = candidate
 				maxMatchLength = len(candidate.Path)
 			}
@@ -290,7 +290,7 @@ func (h *HierarchicalGenerator) writeHierarchicalContent(file *os.File, node *Do
 		}
 		headerPrefix := strings.Repeat("#", headerLevel)
 		anchor := h.createAnchor(node.Title)
-		
+
 		fmt.Fprintf(file, "%s %s {#%s}\n\n", headerPrefix, node.Title, anchor)
 		fmt.Fprintf(file, "**URL:** %s  \n", node.URL)
 		fmt.Fprintf(file, "**Scraped:** %s\n\n", node.Timestamp.Format(time.RFC3339))
@@ -345,7 +345,7 @@ func (h *HierarchicalGenerator) writeHierarchicalFiles(node *DocumentNode, baseP
 	if node.Title != "" && node.Title != "Root" { // Skip root node
 		safeName := h.createSafeDirectoryName(node.Title)
 		currentPath = filepath.Join(basePath, safeName)
-		
+
 		// Write content file
 		filename := filepath.Join(currentPath, "index.md")
 		file, err := os.Create(filename)
@@ -356,7 +356,7 @@ func (h *HierarchicalGenerator) writeHierarchicalFiles(node *DocumentNode, baseP
 		fmt.Fprintf(file, "# %s\n\n", node.Title)
 		fmt.Fprintf(file, "**URL:** %s  \n", node.URL)
 		fmt.Fprintf(file, "**Scraped:** %s\n\n", node.Timestamp.Format(time.RFC3339))
-		
+
 		// Add navigation to children if any
 		if len(node.Children) > 0 {
 			fmt.Fprintf(file, "## Sub-sections\n\n")
@@ -366,7 +366,7 @@ func (h *HierarchicalGenerator) writeHierarchicalFiles(node *DocumentNode, baseP
 			}
 			fmt.Fprintf(file, "\n")
 		}
-		
+
 		fmt.Fprintf(file, "---\n\n")
 		fmt.Fprintf(file, "%s\n", node.Content)
 		file.Close()
@@ -457,13 +457,13 @@ func (h *HierarchicalGenerator) writeHierarchicalTextContent(file *os.File, node
 	if node.Title != "" && node.Title != "Root" { // Skip root node
 		indent := strings.Repeat("  ", level)
 		separator := strings.Repeat("=", 80-len(indent))
-		
+
 		fmt.Fprintf(file, "%s%s\n", indent, separator)
 		fmt.Fprintf(file, "%sTITLE: %s\n", indent, node.Title)
 		fmt.Fprintf(file, "%sURL: %s\n", indent, node.URL)
 		fmt.Fprintf(file, "%sSCRAPED: %s\n", indent, node.Timestamp.Format(time.RFC3339))
 		fmt.Fprintf(file, "%s%s\n\n", indent, separator)
-		
+
 		// Indent content
 		contentLines := strings.Split(node.Content, "\n")
 		for _, line := range contentLines {
@@ -539,16 +539,16 @@ func (h *HierarchicalGenerator) createSafeDirectoryName(title string) string {
 	safe := regexp.MustCompile(`[^a-zA-Z0-9\-_\s]`).ReplaceAllString(title, "")
 	safe = regexp.MustCompile(`\s+`).ReplaceAllString(safe, "_")
 	safe = strings.Trim(safe, "_")
-	
+
 	// Limit length
 	if len(safe) > 30 {
 		safe = safe[:30]
 	}
-	
+
 	if safe == "" {
 		safe = "untitled"
 	}
-	
+
 	return strings.ToLower(safe)
 }
 

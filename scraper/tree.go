@@ -11,19 +11,19 @@ import (
 
 // ContentQuality represents quality metrics for content
 type ContentQuality struct {
-	Score           float64           `json:"score"`
-	WordCount       int               `json:"word_count"`
-	CodeBlockCount  int               `json:"code_block_count"`
-	ImageCount      int               `json:"image_count"`
-	LinkCount       int               `json:"link_count"`
-	EmptyLineRatio  float64           `json:"empty_line_ratio"`
-	ContentRatio    float64           `json:"content_ratio"`
-	HasTitle        bool              `json:"has_title"`
-	HasHeaders      bool              `json:"has_headers"`
-	IsNavigationPage bool             `json:"is_navigation_page"`
-	Language        string            `json:"language"`
-	Issues          []QualityIssue    `json:"issues"`
-	Tags            []string          `json:"tags"`
+	Score            float64        `json:"score"`
+	WordCount        int            `json:"word_count"`
+	CodeBlockCount   int            `json:"code_block_count"`
+	ImageCount       int            `json:"image_count"`
+	LinkCount        int            `json:"link_count"`
+	EmptyLineRatio   float64        `json:"empty_line_ratio"`
+	ContentRatio     float64        `json:"content_ratio"`
+	HasTitle         bool           `json:"has_title"`
+	HasHeaders       bool           `json:"has_headers"`
+	IsNavigationPage bool           `json:"is_navigation_page"`
+	Language         string         `json:"language"`
+	Issues           []QualityIssue `json:"issues"`
+	Tags             []string       `json:"tags"`
 }
 
 // QualityIssue represents a content quality issue
@@ -35,36 +35,36 @@ type QualityIssue struct {
 
 // NodeMetadata contains metadata about a document node
 type NodeMetadata struct {
-	WordCount       int               `json:"word_count"`
-	LastModified    time.Time         `json:"last_modified"`
-	ContentType     string            `json:"content_type"`
-	HasCodeBlocks   bool              `json:"has_code_blocks"`
-	HasImages       bool              `json:"has_images"`
-	Quality         ContentQuality    `json:"quality"`
-	Tags            []string          `json:"tags"`
+	WordCount     int            `json:"word_count"`
+	LastModified  time.Time      `json:"last_modified"`
+	ContentType   string         `json:"content_type"`
+	HasCodeBlocks bool           `json:"has_code_blocks"`
+	HasImages     bool           `json:"has_images"`
+	Quality       ContentQuality `json:"quality"`
+	Tags          []string       `json:"tags"`
 }
 
 // DocumentNode represents a node in the documentation tree
 type DocumentNode struct {
-	URL          string            `json:"url"`
-	Path         string            `json:"path"`
-	Title        string            `json:"title"`
-	Content      string            `json:"content,omitempty"`
-	Depth        int               `json:"depth"`
-	Level        int               `json:"level"`
-	Parent       *DocumentNode     `json:"-"`
-	Children     []*DocumentNode   `json:"children"`
-	Metadata     NodeMetadata      `json:"metadata"`
-	Index        int               `json:"index"`
+	URL      string          `json:"url"`
+	Path     string          `json:"path"`
+	Title    string          `json:"title"`
+	Content  string          `json:"content,omitempty"`
+	Depth    int             `json:"depth"`
+	Level    int             `json:"level"`
+	Parent   *DocumentNode   `json:"-"`
+	Children []*DocumentNode `json:"children"`
+	Metadata NodeMetadata    `json:"metadata"`
+	Index    int             `json:"index"`
 }
 
 // DocumentTree represents the complete documentation tree structure
 type DocumentTree struct {
-	Root            *DocumentNode                `json:"root"`
-	NodeMap         map[string]*DocumentNode     `json:"-"`
-	MaxDepth        int                          `json:"max_depth"`
-	TotalNodes      int                          `json:"total_nodes"`
-	BuildTime       time.Time                    `json:"build_time"`
+	Root       *DocumentNode            `json:"root"`
+	NodeMap    map[string]*DocumentNode `json:"-"`
+	MaxDepth   int                      `json:"max_depth"`
+	TotalNodes int                      `json:"total_nodes"`
+	BuildTime  time.Time                `json:"build_time"`
 }
 
 // SortCriteria defines how to sort tree nodes
@@ -72,23 +72,23 @@ type SortCriteria string
 
 const (
 	SortByIndex SortCriteria = "index"
-	SortByTitle SortCriteria = "title" 
+	SortByTitle SortCriteria = "title"
 	SortByURL   SortCriteria = "url"
 	SortByDate  SortCriteria = "date"
 )
 
 // TreeConfig defines configuration for tree building
 type TreeConfig struct {
-	BuildingStrategy    string       `yaml:"building_strategy"`
-	UseURLHierarchy     bool         `yaml:"use_url_hierarchy"`
-	UseBreadcrumbs      bool         `yaml:"use_breadcrumbs"`
-	UseNavigation       bool         `yaml:"use_navigation"`
-	FallbackToRoot      bool         `yaml:"fallback_to_root"`
-	SortChildren        bool         `yaml:"sort_children"`
-	SortBy              SortCriteria `yaml:"sort_by"`
-	SortOrder           string       `yaml:"sort_order"`
-	AutoIndex           bool         `yaml:"auto_index"`
-	PreserveOriginalOrder bool       `yaml:"preserve_original_order"`
+	BuildingStrategy      string       `yaml:"building_strategy"`
+	UseURLHierarchy       bool         `yaml:"use_url_hierarchy"`
+	UseBreadcrumbs        bool         `yaml:"use_breadcrumbs"`
+	UseNavigation         bool         `yaml:"use_navigation"`
+	FallbackToRoot        bool         `yaml:"fallback_to_root"`
+	SortChildren          bool         `yaml:"sort_children"`
+	SortBy                SortCriteria `yaml:"sort_by"`
+	SortOrder             string       `yaml:"sort_order"`
+	AutoIndex             bool         `yaml:"auto_index"`
+	PreserveOriginalOrder bool         `yaml:"preserve_original_order"`
 }
 
 // ScrapedContent represents content scraped from a page
@@ -114,8 +114,8 @@ func NewTreeBuilder(config TreeConfig) *TreeBuilder {
 // BuildTree builds a documentation tree from URLs and content
 func (tb *TreeBuilder) BuildTree(urls []string, contents map[string]ScrapedContent) *DocumentTree {
 	tree := &DocumentTree{
-		NodeMap:    make(map[string]*DocumentNode),
-		BuildTime:  time.Now(),
+		NodeMap:   make(map[string]*DocumentNode),
+		BuildTime: time.Now(),
 	}
 
 	// Create root node
@@ -231,8 +231,8 @@ func (tb *TreeBuilder) findParentByURLHierarchy(node *DocumentNode, tree *Docume
 		}
 
 		if existingParsed.Host == parsedURL.Host {
-			if existingParsed.Path == parentPath || 
-			   (parentPath != "/" && strings.HasPrefix(urlPath, existingParsed.Path+"/")) {
+			if existingParsed.Path == parentPath ||
+				(parentPath != "/" && strings.HasPrefix(urlPath, existingParsed.Path+"/")) {
 				return existingNode
 			}
 		}
@@ -396,7 +396,7 @@ func (dt *DocumentTree) GetAllNodes() []*DocumentNode {
 // GetNodesByLevel returns all nodes at a specific level
 func (dt *DocumentTree) GetNodesByLevel(level int) []*DocumentNode {
 	var nodes []*DocumentNode
-	
+
 	dt.TraverseDepthFirst(func(node *DocumentNode) error {
 		if node.Level == level {
 			nodes = append(nodes, node)

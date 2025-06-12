@@ -14,19 +14,19 @@ import (
 
 // DevTools provides development and debugging utilities
 type DevTools struct {
-	config       *config.Config
-	debugMode    bool
-	dryRunMode   bool
-	progressBar  *ProgressTracker
-	profiler     *PerformanceProfiler
-	validator    *ConfigValidator
-	logger       *log.Logger
+	config      *config.Config
+	debugMode   bool
+	dryRunMode  bool
+	progressBar *ProgressTracker
+	profiler    *PerformanceProfiler
+	validator   *ConfigValidator
+	logger      *log.Logger
 }
 
 // NewDevTools creates a new DevTools instance
 func NewDevTools(cfg *config.Config, debugMode, dryRunMode bool) *DevTools {
 	logger := log.New(os.Stdout, "[DEVTOOLS] ", log.LstdFlags)
-	
+
 	return &DevTools{
 		config:      cfg,
 		debugMode:   debugMode,
@@ -41,7 +41,7 @@ func NewDevTools(cfg *config.Config, debugMode, dryRunMode bool) *DevTools {
 // ValidateConfiguration validates the configuration and reports issues
 func (dt *DevTools) ValidateConfiguration() error {
 	dt.logger.Println("Validating configuration...")
-	
+
 	issues := dt.validator.ValidateConfig(dt.config)
 	if len(issues) == 0 {
 		dt.logger.Println("✓ Configuration validation passed")
@@ -75,16 +75,16 @@ func (dt *DevTools) StartDryRun() error {
 	dt.logger.Printf("Max Depth: %d", dt.config.MaxDepth)
 	dt.logger.Printf("Output Format: %s", dt.config.OutputFormat)
 	dt.logger.Printf("Output Directory: %s", dt.config.OutputDir)
-	
+
 	// Simulate URL discovery
 	dt.logger.Println("Simulating URL discovery...")
 	estimatedURLs := dt.estimateURLCount()
 	dt.logger.Printf("Estimated URLs to scrape: %d", estimatedURLs)
-	
+
 	// Estimate time and resources
 	estimatedTime := time.Duration(estimatedURLs) * time.Second * 2 // 2 seconds per URL
 	dt.logger.Printf("Estimated scraping time: %v", estimatedTime)
-	
+
 	return nil
 }
 
@@ -105,7 +105,7 @@ func (dt *DevTools) StartProfiling() {
 func (dt *DevTools) StopProfiling() *PerformanceReport {
 	report := dt.profiler.Stop()
 	dt.Debug("Performance profiling stopped")
-	
+
 	if dt.debugMode {
 		dt.logger.Printf("Performance Report:")
 		dt.logger.Printf("  Total Duration: %v", report.TotalDuration)
@@ -114,7 +114,7 @@ func (dt *DevTools) StopProfiling() *PerformanceReport {
 		dt.logger.Printf("  Total Data Downloaded: %d bytes", report.TotalDataDownloaded)
 		dt.logger.Printf("  Errors Encountered: %d", report.ErrorsEncountered)
 	}
-	
+
 	return report
 }
 
@@ -311,17 +311,17 @@ func NewProgressTracker() *ProgressTracker {
 func (pt *ProgressTracker) Update(current, total int, currentURL string) {
 	pt.mutex.Lock()
 	defer pt.mutex.Unlock()
-	
+
 	pt.current = current
 	pt.total = total
 	pt.currentURL = currentURL
-	
+
 	// Calculate progress percentage
 	var percentage float64
 	if total > 0 {
 		percentage = float64(current) / float64(total) * 100
 	}
-	
+
 	// Calculate ETA
 	elapsed := time.Since(pt.startTime)
 	var eta time.Duration
@@ -330,11 +330,11 @@ func (pt *ProgressTracker) Update(current, total int, currentURL string) {
 		remaining := total - current
 		eta = avgTimePerItem * time.Duration(remaining)
 	}
-	
+
 	// Print progress
-	fmt.Printf("\r[%d/%d] %.1f%% - ETA: %v - %s", 
+	fmt.Printf("\r[%d/%d] %.1f%% - ETA: %v - %s",
 		current, total, percentage, eta.Round(time.Second), currentURL)
-	
+
 	if current == total {
 		fmt.Println("\n✓ Scraping completed!")
 	}
@@ -344,7 +344,7 @@ func (pt *ProgressTracker) Update(current, total int, currentURL string) {
 func (pt *ProgressTracker) GetStatus() (int, int, string, time.Duration) {
 	pt.mutex.RLock()
 	defer pt.mutex.RUnlock()
-	
+
 	elapsed := time.Since(pt.startTime)
 	return pt.current, pt.total, pt.currentURL, elapsed
 }
@@ -371,7 +371,7 @@ func NewPerformanceProfiler() *PerformanceProfiler {
 func (pp *PerformanceProfiler) Start() {
 	pp.mutex.Lock()
 	defer pp.mutex.Unlock()
-	
+
 	pp.startTime = time.Now()
 	pp.pagesScraped = 0
 	pp.totalDataDownloaded = 0
@@ -383,11 +383,11 @@ func (pp *PerformanceProfiler) Start() {
 func (pp *PerformanceProfiler) RecordPageScrape(duration time.Duration, dataSize int64, hadError bool) {
 	pp.mutex.Lock()
 	defer pp.mutex.Unlock()
-	
+
 	pp.pagesScraped++
 	pp.totalDataDownloaded += dataSize
 	pp.pageTimings = append(pp.pageTimings, duration)
-	
+
 	if hadError {
 		pp.errorsEncountered++
 	}
@@ -397,9 +397,9 @@ func (pp *PerformanceProfiler) RecordPageScrape(duration time.Duration, dataSize
 func (pp *PerformanceProfiler) Stop() *PerformanceReport {
 	pp.mutex.Lock()
 	defer pp.mutex.Unlock()
-	
+
 	pp.endTime = time.Now()
-	
+
 	var averageTimePerPage time.Duration
 	if len(pp.pageTimings) > 0 {
 		total := time.Duration(0)
@@ -408,25 +408,25 @@ func (pp *PerformanceProfiler) Stop() *PerformanceReport {
 		}
 		averageTimePerPage = total / time.Duration(len(pp.pageTimings))
 	}
-	
+
 	return &PerformanceReport{
-		TotalDuration:        pp.endTime.Sub(pp.startTime),
-		PagesScraped:         pp.pagesScraped,
-		AverageTimePerPage:   averageTimePerPage,
-		TotalDataDownloaded:  pp.totalDataDownloaded,
-		ErrorsEncountered:    pp.errorsEncountered,
-		PageTimings:          append([]time.Duration{}, pp.pageTimings...),
+		TotalDuration:       pp.endTime.Sub(pp.startTime),
+		PagesScraped:        pp.pagesScraped,
+		AverageTimePerPage:  averageTimePerPage,
+		TotalDataDownloaded: pp.totalDataDownloaded,
+		ErrorsEncountered:   pp.errorsEncountered,
+		PageTimings:         append([]time.Duration{}, pp.pageTimings...),
 	}
 }
 
 // PerformanceReport contains performance metrics
 type PerformanceReport struct {
-	TotalDuration       time.Duration     `json:"total_duration"`
-	PagesScraped        int               `json:"pages_scraped"`
-	AverageTimePerPage  time.Duration     `json:"average_time_per_page"`
-	TotalDataDownloaded int64             `json:"total_data_downloaded"`
-	ErrorsEncountered   int               `json:"errors_encountered"`
-	PageTimings         []time.Duration   `json:"page_timings"`
+	TotalDuration       time.Duration   `json:"total_duration"`
+	PagesScraped        int             `json:"pages_scraped"`
+	AverageTimePerPage  time.Duration   `json:"average_time_per_page"`
+	TotalDataDownloaded int64           `json:"total_data_downloaded"`
+	ErrorsEncountered   int             `json:"errors_encountered"`
+	PageTimings         []time.Duration `json:"page_timings"`
 }
 
 // SaveReport saves the performance report to a file
@@ -436,22 +436,22 @@ func (pr *PerformanceReport) SaveReport(filename string) error {
 		return err
 	}
 	defer file.Close()
-	
+
 	fmt.Fprintf(file, "Performance Report\n")
 	fmt.Fprintf(file, "==================\n\n")
 	fmt.Fprintf(file, "Total Duration: %v\n", pr.TotalDuration)
 	fmt.Fprintf(file, "Pages Scraped: %d\n", pr.PagesScraped)
 	fmt.Fprintf(file, "Average Time per Page: %v\n", pr.AverageTimePerPage)
-	fmt.Fprintf(file, "Total Data Downloaded: %d bytes (%.2f MB)\n", 
+	fmt.Fprintf(file, "Total Data Downloaded: %d bytes (%.2f MB)\n",
 		pr.TotalDataDownloaded, float64(pr.TotalDataDownloaded)/1024/1024)
 	fmt.Fprintf(file, "Errors Encountered: %d\n", pr.ErrorsEncountered)
-	
+
 	if len(pr.PageTimings) > 0 {
 		fmt.Fprintf(file, "\nPage Timing Details:\n")
 		for i, timing := range pr.PageTimings {
 			fmt.Fprintf(file, "Page %d: %v\n", i+1, timing)
 		}
 	}
-	
+
 	return nil
 }

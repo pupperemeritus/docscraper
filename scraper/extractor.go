@@ -101,18 +101,18 @@ func (e *ContentExtractor) cleanText(text string) string {
 		`(?i)Subscribe to \w+ \w+\s*`,
 		`(?i)Follow us on \w+\s*`,
 	}
-	
+
 	for _, pattern := range noisePatterns {
 		re := regexp.MustCompile(pattern)
 		text = re.ReplaceAllString(text, "")
 	}
-	
+
 	// Remove excessive whitespace
 	re := regexp.MustCompile(`\s+`)
 	text = re.ReplaceAllString(text, " ")
-	
+
 	// Remove leading/trailing whitespace
 	text = strings.TrimSpace(text)
-	
+
 	return text
 }

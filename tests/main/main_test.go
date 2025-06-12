@@ -140,9 +140,9 @@ func TestDefaultConfiguration(t *testing.T) {
 
 func TestConfigurationValidation(t *testing.T) {
 	tests := []struct {
-		name        string
-		modifyConfig func(*config.Config)
-		expectError bool
+		name          string
+		modifyConfig  func(*config.Config)
+		expectError   bool
 		errorContains string
 	}{
 		{
@@ -157,7 +157,7 @@ func TestConfigurationValidation(t *testing.T) {
 			modifyConfig: func(cfg *config.Config) {
 				cfg.RootURL = ""
 			},
-			expectError: true,
+			expectError:   true,
 			errorContains: "root_url is required",
 		},
 		{
@@ -165,7 +165,7 @@ func TestConfigurationValidation(t *testing.T) {
 			modifyConfig: func(cfg *config.Config) {
 				cfg.OutputFormat = "invalid"
 			},
-			expectError: true,
+			expectError:   true,
 			errorContains: "invalid output_format",
 		},
 		{
@@ -173,7 +173,7 @@ func TestConfigurationValidation(t *testing.T) {
 			modifyConfig: func(cfg *config.Config) {
 				cfg.MinDelay = -1
 			},
-			expectError: true,
+			expectError:   true,
 			errorContains: "min_delay cannot be negative",
 		},
 		{
@@ -182,7 +182,7 @@ func TestConfigurationValidation(t *testing.T) {
 				cfg.MinDelay = 10
 				cfg.MaxDelay = 5
 			},
-			expectError: true,
+			expectError:   true,
 			errorContains: "max_delay must be greater than or equal to min_delay",
 		},
 	}

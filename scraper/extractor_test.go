@@ -116,10 +116,10 @@ func TestContentExtractor_ExtractContent(t *testing.T) {
 	extractor := NewContentExtractor()
 
 	tests := []struct {
-		name     string
-		html     string
-		expected string
-		contains []string
+		name        string
+		html        string
+		expected    string
+		contains    []string
 		notContains []string
 	}{
 		{
@@ -178,7 +178,7 @@ func TestContentExtractor_ExtractContent(t *testing.T) {
 				<div class="content">Short</div>
 				<article>This is a much longer piece of content that should be substantial enough to be considered the main content of the page</article>
 			</body></html>`,
-			contains: []string{"much longer piece"},
+			contains:    []string{"much longer piece"},
 			notContains: []string{"Short"},
 		},
 	}

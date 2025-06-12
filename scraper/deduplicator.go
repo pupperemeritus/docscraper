@@ -8,21 +8,21 @@ import (
 
 // URLNormalizer defines options for URL normalization
 type URLNormalizer struct {
-	RemoveFragment    bool // Remove #section
-	RemoveQuery       bool // Remove ?param=value
-	RemoveTrailing    bool // Remove trailing slash
-	LowerCase         bool // Convert to lowercase
-	RemoveWWW         bool // Remove www. prefix
-	SortQueryParams   bool // Sort query parameters
+	RemoveFragment  bool // Remove #section
+	RemoveQuery     bool // Remove ?param=value
+	RemoveTrailing  bool // Remove trailing slash
+	LowerCase       bool // Convert to lowercase
+	RemoveWWW       bool // Remove www. prefix
+	SortQueryParams bool // Sort query parameters
 }
 
 // LinkDeduplicator handles duplicate URL detection and filtering
 type LinkDeduplicator struct {
-	seenURLs        map[string]bool
-	canonicalMap    map[string]string
-	duplicateCount  int
-	normalizeFunc   func(string) string
-	normalizer      URLNormalizer
+	seenURLs       map[string]bool
+	canonicalMap   map[string]string
+	duplicateCount int
+	normalizeFunc  func(string) string
+	normalizer     URLNormalizer
 }
 
 // NewLinkDeduplicator creates a new link deduplicator with the given configuration
@@ -56,14 +56,14 @@ func (ld *LinkDeduplicator) NormalizeURL(rawURL string) (string, error) {
 	if ld.normalizer.SortQueryParams && !ld.normalizer.RemoveQuery {
 		values := parsedURL.Query()
 		sortedQuery := url.Values{}
-		
+
 		// Get sorted keys
 		keys := make([]string, 0, len(values))
 		for k := range values {
 			keys = append(keys, k)
 		}
 		sort.Strings(keys)
-		
+
 		// Rebuild query with sorted parameters
 		for _, k := range keys {
 			for _, v := range values[k] {
@@ -135,12 +135,12 @@ func (ld *LinkDeduplicator) GetCanonicalURL(rawURL string) string {
 	if canonical, exists := ld.canonicalMap[rawURL]; exists {
 		return canonical
 	}
-	
+
 	// If not in map, try to normalize it
 	if normalized, err := ld.NormalizeURL(rawURL); err == nil {
 		return normalized
 	}
-	
+
 	// Return original if normalization fails
 	return rawURL
 }

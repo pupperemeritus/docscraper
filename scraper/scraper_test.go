@@ -82,11 +82,11 @@ func TestNew(t *testing.T) {
 			}
 			defer os.Remove(logFile.Name())
 			logFile.Close()
-			
+
 			tt.config.LogFile = logFile.Name()
 
 			scraper, err := New(tt.config)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("New() expected error but got none")
@@ -278,7 +278,7 @@ func TestScraper_checkRobotsTxt(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			allowed, err := scraper.checkRobotsTxt(tt.rootURL)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("checkRobotsTxt() expected error but got none")
@@ -453,7 +453,7 @@ func TestScraper_Integration(t *testing.T) {
 	}
 
 	cfg := createTestConfig()
-	
+
 	logFile, err := os.CreateTemp("", "test-log-*.log")
 	if err != nil {
 		t.Fatal(err)

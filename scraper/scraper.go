@@ -32,11 +32,11 @@ type ProgressCallback func(current, total int, currentURL string)
 // EnhancedScraper extends Scraper with advanced features
 type EnhancedScraper struct {
 	*Scraper
-	deduplicator      *LinkDeduplicator
-	qualityAnalyzer   *ContentQualityAnalyzer
-	progressCallback  ProgressCallback
-	currentProgress   int
-	totalEstimated    int
+	deduplicator     *LinkDeduplicator
+	qualityAnalyzer  *ContentQualityAnalyzer
+	progressCallback ProgressCallback
+	currentProgress  int
+	totalEstimated   int
 }
 
 // Scraper handles the web scraping functionality
@@ -145,7 +145,7 @@ func (s *Scraper) setupCallbacks() {
 		// Count total links on the page
 		linkCount := e.DOM.Find("a[href]").Length()
 		s.logger.Printf("Page %s contains %d links", e.Request.URL.String(), linkCount)
-		
+
 		s.extractPageContent(e)
 	})
 
@@ -155,7 +155,7 @@ func (s *Scraper) setupCallbacks() {
 		linkCounter++
 		link := e.Attr("href")
 		s.logger.Printf("Processing link #%d: %s (current depth: %d)", linkCounter, link, e.Request.Depth)
-		
+
 		if s.shouldFollowLink(link, e.Request.URL) {
 			s.logger.Printf("Following link #%d: %s", linkCounter, link)
 			e.Request.Visit(link)
@@ -181,10 +181,10 @@ func (s *Scraper) extractPageContent(e *colly.HTMLElement) {
 
 	// Extract title
 	title := s.extractor.ExtractTitle(doc)
-	
+
 	// Extract main content
 	content := s.extractor.ExtractContent(doc)
-	
+
 	if strings.TrimSpace(content) == "" {
 		s.logger.Printf("No content found for: %s", e.Request.URL.String())
 		return
@@ -206,7 +206,7 @@ func (s *Scraper) extractPageContent(e *colly.HTMLElement) {
 // shouldFollowLink determines if a link should be followed
 func (s *Scraper) shouldFollowLink(link string, baseURL *url.URL) bool {
 	s.logger.Printf("Evaluating link: %s from base: %s", link, baseURL.String())
-	
+
 	// Parse the link
 	linkURL, err := url.Parse(link)
 	if err != nil {
@@ -215,10 +215,10 @@ func (s *Scraper) shouldFollowLink(link string, baseURL *url.URL) bool {
 	}
 
 	// Check for invalid formats that look like malformed absolute URLs or contain invalid characters
-	if !linkURL.IsAbs() && (strings.Contains(link, "://") || 
-		(len(link) > 0 && !strings.HasPrefix(link, "/") && !strings.HasPrefix(link, "#") && 
-		 !strings.HasPrefix(link, "?") && !strings.Contains(link, ".") && 
-		 !strings.Contains(link, "/") && len(link) > 10)) {
+	if !linkURL.IsAbs() && (strings.Contains(link, "://") ||
+		(len(link) > 0 && !strings.HasPrefix(link, "/") && !strings.HasPrefix(link, "#") &&
+			!strings.HasPrefix(link, "?") && !strings.Contains(link, ".") &&
+			!strings.Contains(link, "/") && len(link) > 10)) {
 		s.logger.Printf("Invalid URL format: %s", link)
 		return false
 	}
@@ -279,11 +279,11 @@ func (s *Scraper) Scrape() error {
 	}
 
 	s.logger.Printf("Starting scrape of: %s with max depth: %d", s.config.RootURL, s.config.MaxDepth)
-	
+
 	// Start scraping
 	s.collector.Visit(s.config.RootURL)
 	s.collector.Wait()
-	
+
 	s.logger.Printf("Scraping completed. Total pages found: %d", len(s.pages))
 	for i, page := range s.pages {
 		s.logger.Printf("Page %d: %s (depth: %d)", i+1, page.URL, page.Depth)
@@ -300,7 +300,7 @@ func (s *Scraper) checkRobotsTxt(rootURL string) (bool, error) {
 	}
 
 	robotsURL := fmt.Sprintf("%s://%s/robots.txt", parsedURL.Scheme, parsedURL.Host)
-	
+
 	resp, err := http.Get(robotsURL)
 	if err != nil {
 		return true, nil // If robots.txt doesn't exist, assume allowed
@@ -314,7 +314,7 @@ func (s *Scraper) checkRobotsTxt(rootURL string) (bool, error) {
 	// Simple robots.txt parsing (basic implementation)
 	scanner := bufio.NewScanner(resp.Body)
 	userAgentMatch := false
-	
+
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if strings.HasPrefix(strings.ToLower(line), "user-agent:") {
@@ -412,7 +412,7 @@ func (es *EnhancedScraper) setupDeduplicationCallbacks() {
 	// Replace the original link handling with deduplication-aware version
 	es.collector.OnHTML("a[href]", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
-		
+
 		// Check if this URL should be followed (use existing logic)
 		if !es.shouldFollowLink(link, e.Request.URL) {
 			return
@@ -440,7 +440,7 @@ func (es *EnhancedScraper) setupQualityAnalysisCallbacks() {
 		// Extract content using DOM
 		title := es.extractor.ExtractTitle(e.DOM)
 		content := es.extractor.ExtractContent(e.DOM)
-		
+
 		// Create ScrapedContent struct for quality analysis
 		scrapedContent := ScrapedContent{
 			URL:     e.Request.URL.String(),
@@ -452,10 +452,10 @@ func (es *EnhancedScraper) setupQualityAnalysisCallbacks() {
 				ContentType:  "text/html",
 			},
 		}
-		
+
 		// Analyze quality
 		quality := es.qualityAnalyzer.AnalyzeContent(scrapedContent)
-		
+
 		// Check if content meets quality standards
 		if quality.Score < es.config.QualityAnalysis.MinScore {
 			es.logger.Printf("Skipping low quality page (score: %.2f): %s", quality.Score, e.Request.URL.String())
@@ -463,7 +463,7 @@ func (es *EnhancedScraper) setupQualityAnalysisCallbacks() {
 		}
 
 		if len(strings.Fields(content)) < es.config.QualityAnalysis.MinWordCount {
-			es.logger.Printf("Skipping page with insufficient content (%d words): %s", 
+			es.logger.Printf("Skipping page with insufficient content (%d words): %s",
 				len(strings.Fields(content)), e.Request.URL.String())
 			return
 		}
@@ -486,7 +486,7 @@ func (es *EnhancedScraper) setupQualityAnalysisCallbacks() {
 		}
 
 		es.pages = append(es.pages, page)
-		
+
 		// Update progress
 		if es.progressCallback != nil {
 			es.currentProgress++

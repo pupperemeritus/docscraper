@@ -107,7 +107,7 @@ func (g *Generator) generateSingleMarkdown() error {
 		fmt.Fprintf(file, "**URL:** %s  \n", page.URL)
 		fmt.Fprintf(file, "**Scraped:** %s\n\n", page.Timestamp.Format(time.RFC3339))
 		fmt.Fprintf(file, "%s\n\n", page.Content)
-		
+
 		if i < len(g.pages)-1 {
 			fmt.Fprintf(file, "---\n\n")
 		}
@@ -123,7 +123,7 @@ func (g *Generator) generatePerPageMarkdown() error {
 		// Create numbered filename
 		filename := fmt.Sprintf("page_%03d.md", i+1)
 		filepath := filepath.Join(g.config.OutputDir, filename)
-		
+
 		file, err := os.Create(filepath)
 		if err != nil {
 			return err
@@ -185,7 +185,7 @@ func (g *Generator) generateTextOutput() error {
 			fmt.Fprintf(file, "URL: %s\n", page.URL)
 			fmt.Fprintf(file, "SCRAPED: %s\n", page.Timestamp.Format(time.RFC3339))
 			fmt.Fprintf(file, "CONTENT:\n%s\n", page.Content)
-			
+
 			if i < len(g.pages)-1 {
 				separator := "\n" + strings.Repeat("=", 80) + "\n\n"
 				fmt.Fprint(file, separator)
@@ -195,7 +195,7 @@ func (g *Generator) generateTextOutput() error {
 		for i, page := range g.pages {
 			filename := g.createSafeFilename(page.Title, i, ".txt")
 			filepath := filepath.Join(g.config.OutputDir, filename)
-			
+
 			file, err := os.Create(filepath)
 			if err != nil {
 				return err
@@ -225,7 +225,7 @@ func (g *Generator) generateJSONOutput() error {
 
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
-	
+
 	output := map[string]interface{}{
 		"root_url":    g.config.RootURL,
 		"scraped_at":  time.Now().Format(time.RFC3339),
@@ -273,19 +273,19 @@ func (g *Generator) createSafeFilename(title string, index int, extension string
 	safe := regexp.MustCompile(`[^a-zA-Z0-9\-_\s]`).ReplaceAllString(title, "")
 	safe = regexp.MustCompile(`\s+`).ReplaceAllString(safe, "_")
 	safe = strings.Trim(safe, "_")
-	
+
 	// Limit length
 	if len(safe) > 50 {
 		safe = safe[:50]
 	}
-	
+
 	// Ensure uniqueness
 	if safe == "" {
 		safe = fmt.Sprintf("page_%d", index)
 	} else {
 		safe = fmt.Sprintf("%s_%d", safe, index)
 	}
-	
+
 	return safe + extension
 }
 

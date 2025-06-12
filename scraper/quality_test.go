@@ -196,18 +196,18 @@ func TestContentQualityAnalyzer_countCodeBlocks(t *testing.T) {
 		expected int
 	}{
 		{
-			name: "single code block",
-			text: "Here's some code:\n```\nfunction test() {\n  return true;\n}\n```",
+			name:     "single code block",
+			text:     "Here's some code:\n```\nfunction test() {\n  return true;\n}\n```",
 			expected: 1,
 		},
 		{
-			name: "multiple code blocks",
-			text: "```javascript\nconst a = 1;\n```\n\nAnd also:\n```python\nprint('hello')\n```",
+			name:     "multiple code blocks",
+			text:     "```javascript\nconst a = 1;\n```\n\nAnd also:\n```python\nprint('hello')\n```",
 			expected: 2,
 		},
 		{
-			name: "inline code",
-			text: "Use `console.log()` and `alert()` and `document.write()` for output",
+			name:     "inline code",
+			text:     "Use `console.log()` and `alert()` and `document.write()` for output",
 			expected: 1, // 3 inline codes = 1 block equivalent
 		},
 		{

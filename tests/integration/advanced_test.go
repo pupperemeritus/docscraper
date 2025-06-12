@@ -24,17 +24,17 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 
 	// Create advanced configuration with all features enabled
 	cfg := &config.Config{
-		RootURL:      "https://httpbin.org", // Using httpbin for reliable testing
-		OutputFormat: "markdown",
-		OutputType:   "per-page",
-		OutputDir:    tempDir,
-		MinDelay:     0, // No delay for tests
-		MaxDelay:     0,
-		MaxDepth:     2,
+		RootURL:       "https://httpbin.org", // Using httpbin for reliable testing
+		OutputFormat:  "markdown",
+		OutputType:    "per-page",
+		OutputDir:     tempDir,
+		MinDelay:      0, // No delay for tests
+		MaxDelay:      0,
+		MaxDepth:      2,
 		RespectRobots: false, // Ignore robots.txt for testing
-		Verbose:      true,
-		LogFile:      filepath.Join(tempDir, "test.log"),
-		UserAgents:   []string{"TestAgent/1.0"},
+		Verbose:       true,
+		LogFile:       filepath.Join(tempDir, "test.log"),
+		UserAgents:    []string{"TestAgent/1.0"},
 	}
 
 	// Enable all advanced features
@@ -52,10 +52,10 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 	cfg.SetDefaults()
 
 	// Override quality settings for testing
-	cfg.QualityAnalysis.MinScore = 0.1          // Lower threshold for testing
-	cfg.QualityAnalysis.MinWordCount = 5        // Lower word count for testing
-	cfg.QualityAnalysis.RequireTitle = false    // Don't require titles for testing
-	cfg.QualityAnalysis.RequireContent = false  // Don't require content for testing
+	cfg.QualityAnalysis.MinScore = 0.1         // Lower threshold for testing
+	cfg.QualityAnalysis.MinWordCount = 5       // Lower word count for testing
+	cfg.QualityAnalysis.RequireTitle = false   // Don't require titles for testing
+	cfg.QualityAnalysis.RequireContent = false // Don't require content for testing
 
 	// Override devtools settings
 	cfg.DevTools.EnableDebugMode = true
@@ -74,7 +74,7 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 	t.Run("Dry Run Mode", func(t *testing.T) {
 		dryRunCfg := *cfg
 		dryRunCfg.DevTools.EnableDryRun = true
-		
+
 		dt := devtools.NewDevTools(&dryRunCfg, false, true)
 		err := dt.StartDryRun()
 		if err != nil {
@@ -115,7 +115,7 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 				Depth:     0,
 			},
 			{
-				Title:     "Test Page 2", 
+				Title:     "Test Page 2",
 				URL:       "https://httpbin.org/get",
 				Content:   "This is test content for page 2 with different content structure.",
 				Timestamp: time.Now(),
@@ -169,7 +169,7 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 				SkipNavigationPages: true,
 			}
 			analyzer := scraper.NewContentQualityAnalyzer(qualityConfig)
-			
+
 			scrapedContent := scraper.ScrapedContent{
 				URL:     "https://httpbin.org/test",
 				Title:   "Test Page",
@@ -264,7 +264,7 @@ func TestAdvancedFeaturesIntegration(t *testing.T) {
 func TestConfigurationFeatures(t *testing.T) {
 	t.Run("Advanced Configuration Loading", func(t *testing.T) {
 		cfg := &config.Config{}
-		
+
 		// Test loading advanced config
 		err := config.LoadConfig("config-advanced.yaml", cfg)
 		if err != nil {
@@ -350,7 +350,7 @@ func TestFeatureToggling(t *testing.T) {
 		cfg := *baseConfig
 		trueVal := true
 		falseVal := false
-		
+
 		cfg.UseHierarchicalOrdering = &trueVal
 		cfg.EnableDeduplication = &falseVal
 		cfg.EnableQualityAnalysis = &trueVal
@@ -382,7 +382,7 @@ func TestEdgeCases(t *testing.T) {
 		}
 
 		emptyPages := []output.PageData{}
-		
+
 		// Test standard generator with empty pages
 		generator := output.New(cfg, emptyPages)
 		err := generator.Generate()
@@ -418,28 +418,28 @@ func TestEdgeCases(t *testing.T) {
 			RequireTitle:   true,
 			RequireContent: true,
 		}
-		
+
 		analyzer := scraper.NewContentQualityAnalyzer(qualityConfig)
-		
+
 		// Test with empty content
 		emptyContent := scraper.ScrapedContent{
 			URL:     "https://example.com",
 			Title:   "",
 			Content: "",
 		}
-		
+
 		quality := analyzer.AnalyzeContent(emptyContent)
 		if quality.Score > 0.5 { // Should be low quality
 			t.Error("Expected low quality score for empty content")
 		}
-		
+
 		// Test with minimal content
 		minimalContent := scraper.ScrapedContent{
 			URL:     "https://example.com",
 			Title:   "Test",
 			Content: "Short content.",
 		}
-		
+
 		quality = analyzer.AnalyzeContent(minimalContent)
 		if quality.WordCount != 2 {
 			t.Errorf("Expected word count 2, got %d", quality.WordCount)
@@ -486,7 +486,7 @@ func BenchmarkAdvancedFeatures(b *testing.B) {
 		dedup := scraper.NewLinkDeduplicator(scraper.URLNormalizer{
 			LowerCase: true,
 		})
-		
+
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			for j := 0; j < 100; j++ {
@@ -504,7 +504,7 @@ func BenchmarkAdvancedFeatures(b *testing.B) {
 			Title:   "Test Page",
 			Content: strings.Repeat("This is test content for quality analysis. ", 20),
 		}
-		
+
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
 			_ = analyzer.AnalyzeContent(content)

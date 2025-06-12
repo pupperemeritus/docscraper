@@ -8,40 +8,40 @@ import (
 
 // QualityConfig defines configuration for content quality analysis
 type QualityConfig struct {
-	MinWordCount        int     `yaml:"min_word_count"`
-	MinCodeBlockCount   int     `yaml:"min_code_block_count"`
-	MaxEmptyLineRatio   float64 `yaml:"max_empty_line_ratio"`
-	RequireTitle        bool    `yaml:"require_title"`
-	RequireContent      bool    `yaml:"require_content"`
-	SkipNavigationPages bool    `yaml:"skip_navigation_pages"`
-	MinContentRatio     float64 `yaml:"min_content_ratio"`
+	MinWordCount        int      `yaml:"min_word_count"`
+	MinCodeBlockCount   int      `yaml:"min_code_block_count"`
+	MaxEmptyLineRatio   float64  `yaml:"max_empty_line_ratio"`
+	RequireTitle        bool     `yaml:"require_title"`
+	RequireContent      bool     `yaml:"require_content"`
+	SkipNavigationPages bool     `yaml:"skip_navigation_pages"`
+	MinContentRatio     float64  `yaml:"min_content_ratio"`
 	BlacklistPatterns   []string `yaml:"blacklist_patterns"`
 	WhitelistPatterns   []string `yaml:"whitelist_patterns"`
 }
 
 // QualityWeights defines weights for different quality metrics
 type QualityWeights struct {
-	WordCount       float64 `yaml:"word_count"`
-	CodeBlocks      float64 `yaml:"code_blocks"`
-	Images          float64 `yaml:"images"`
-	Headers         float64 `yaml:"headers"`
-	ContentRatio    float64 `yaml:"content_ratio"`
-	TitlePresence   float64 `yaml:"title_presence"`
+	WordCount     float64 `yaml:"word_count"`
+	CodeBlocks    float64 `yaml:"code_blocks"`
+	Images        float64 `yaml:"images"`
+	Headers       float64 `yaml:"headers"`
+	ContentRatio  float64 `yaml:"content_ratio"`
+	TitlePresence float64 `yaml:"title_presence"`
 }
 
 // ContentMetrics represents various content metrics
 type ContentMetrics struct {
-	WordCount       int
-	CodeBlockCount  int
-	ImageCount      int
-	LinkCount       int
-	HeaderCount     int
-	EmptyLineRatio  float64
-	ContentRatio    float64
-	HasTitle        bool
-	HasHeaders      bool
-	TotalLines      int
-	EmptyLines      int
+	WordCount      int
+	CodeBlockCount int
+	ImageCount     int
+	LinkCount      int
+	HeaderCount    int
+	EmptyLineRatio float64
+	ContentRatio   float64
+	HasTitle       bool
+	HasHeaders     bool
+	TotalLines     int
+	EmptyLines     int
 }
 
 // ElementCounts represents counts of different HTML elements
@@ -54,8 +54,8 @@ type ElementCounts struct {
 
 // CodeBlock represents a code block found in content
 type CodeBlock struct {
-	Language string
-	Content  string
+	Language  string
+	Content   string
 	LineCount int
 }
 
@@ -75,11 +75,11 @@ type QualityStats struct {
 
 // QualityReport provides a summary of quality analysis
 type QualityReport struct {
-	Stats            QualityStats    `json:"stats"`
-	TopPages         []PageQuality   `json:"top_pages"`
-	WorstPages       []PageQuality   `json:"worst_pages"`
-	CommonIssues     []IssueCount    `json:"common_issues"`
-	GeneratedAt      time.Time       `json:"generated_at"`
+	Stats        QualityStats  `json:"stats"`
+	TopPages     []PageQuality `json:"top_pages"`
+	WorstPages   []PageQuality `json:"worst_pages"`
+	CommonIssues []IssueCount  `json:"common_issues"`
+	GeneratedAt  time.Time     `json:"generated_at"`
 }
 
 // PageQuality represents quality data for a specific page
@@ -130,19 +130,19 @@ func (cqa *ContentQualityAnalyzer) AnalyzeContent(content ScrapedContent) Conten
 	tags := cqa.generateTags(content, metrics)
 
 	quality := ContentQuality{
-		Score:           score,
-		WordCount:       metrics.WordCount,
-		CodeBlockCount:  metrics.CodeBlockCount,
-		ImageCount:      metrics.ImageCount,
-		LinkCount:       metrics.LinkCount,
-		EmptyLineRatio:  metrics.EmptyLineRatio,
-		ContentRatio:    metrics.ContentRatio,
-		HasTitle:        metrics.HasTitle,
-		HasHeaders:      metrics.HasHeaders,
+		Score:            score,
+		WordCount:        metrics.WordCount,
+		CodeBlockCount:   metrics.CodeBlockCount,
+		ImageCount:       metrics.ImageCount,
+		LinkCount:        metrics.LinkCount,
+		EmptyLineRatio:   metrics.EmptyLineRatio,
+		ContentRatio:     metrics.ContentRatio,
+		HasTitle:         metrics.HasTitle,
+		HasHeaders:       metrics.HasHeaders,
 		IsNavigationPage: cqa.IsNavigationPage(content),
-		Language:        language,
-		Issues:          issues,
-		Tags:            tags,
+		Language:         language,
+		Issues:           issues,
+		Tags:             tags,
 	}
 
 	// Update statistics
@@ -155,7 +155,7 @@ func (cqa *ContentQualityAnalyzer) AnalyzeContent(content ScrapedContent) Conten
 func (cqa *ContentQualityAnalyzer) extractMetrics(content ScrapedContent) ContentMetrics {
 	text := content.Content
 	lines := strings.Split(text, "\n")
-	
+
 	metrics := ContentMetrics{
 		WordCount:      cqa.countWords(text),
 		CodeBlockCount: cqa.countCodeBlocks(text),
@@ -200,11 +200,11 @@ func (cqa *ContentQualityAnalyzer) countCodeBlocks(text string) int {
 
 	// Remove code blocks from text to avoid counting their content as inline code
 	textWithoutBlocks := codeBlockPattern.ReplaceAllString(text, "")
-	
+
 	// Also count inline code (`...`) in the remaining text
 	inlineCodePattern := regexp.MustCompile("`[^`]+`")
 	inlineMatches := inlineCodePattern.FindAllString(textWithoutBlocks, -1)
-	
+
 	// Add inline code but with less weight (3 inline = 1 block)
 	count += len(inlineMatches) / 3
 
@@ -313,36 +313,36 @@ func (qs *QualityScorer) CalculateScore(metrics ContentMetrics) float64 {
 func (cqa *ContentQualityAnalyzer) DetectLanguage(content string) string {
 	// Simple language detection based on common patterns
 	// In a real implementation, you might use a proper language detection library
-	
+
 	// Count common English words
 	englishWords := []string{"the", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with", "by"}
 	englishCount := 0
-	
+
 	words := strings.Fields(strings.ToLower(content))
 	wordMap := make(map[string]int)
 	for _, word := range words {
 		wordMap[word]++
 	}
-	
+
 	for _, englishWord := range englishWords {
 		englishCount += wordMap[englishWord]
 	}
-	
+
 	if englishCount > len(words)/20 { // If more than 5% are common English words
 		return "en"
 	}
-	
+
 	return "unknown"
 }
 
 // ExtractCodeBlocks extracts code blocks from content
 func (cqa *ContentQualityAnalyzer) ExtractCodeBlocks(content string) []CodeBlock {
 	var blocks []CodeBlock
-	
+
 	// Extract markdown code blocks
 	codeBlockPattern := regexp.MustCompile("```(\\w*)\\n([\\s\\S]*?)```")
 	matches := codeBlockPattern.FindAllStringSubmatch(content, -1)
-	
+
 	for _, match := range matches {
 		if len(match) >= 3 {
 			language := match[1]
@@ -351,7 +351,7 @@ func (cqa *ContentQualityAnalyzer) ExtractCodeBlocks(content string) []CodeBlock
 			}
 			code := match[2]
 			lineCount := len(strings.Split(code, "\n"))
-			
+
 			blocks = append(blocks, CodeBlock{
 				Language:  language,
 				Content:   code,
@@ -359,14 +359,14 @@ func (cqa *ContentQualityAnalyzer) ExtractCodeBlocks(content string) []CodeBlock
 			})
 		}
 	}
-	
+
 	return blocks
 }
 
 // IsNavigationPage determines if a page is primarily navigation
 func (cqa *ContentQualityAnalyzer) IsNavigationPage(content ScrapedContent) bool {
 	text := strings.ToLower(content.Content)
-	
+
 	// Navigation indicators
 	navIndicators := []string{
 		"table of contents",
@@ -377,14 +377,14 @@ func (cqa *ContentQualityAnalyzer) IsNavigationPage(content ScrapedContent) bool
 		"menu",
 		"links",
 	}
-	
+
 	indicatorCount := 0
 	for _, indicator := range navIndicators {
 		if strings.Contains(text, indicator) {
 			indicatorCount++
 		}
 	}
-	
+
 	// If title suggests navigation
 	title := strings.ToLower(content.Title)
 	for _, indicator := range navIndicators {
@@ -392,25 +392,25 @@ func (cqa *ContentQualityAnalyzer) IsNavigationPage(content ScrapedContent) bool
 			indicatorCount += 2 // Weight title indicators more heavily
 		}
 	}
-	
+
 	// If high ratio of links to content
 	linkPattern := regexp.MustCompile(`\[([^\]]+)\]\([^)]+\)`)
 	linkCount := len(linkPattern.FindAllString(content.Content, -1))
 	wordCount := len(strings.Fields(content.Content))
-	
+
 	if wordCount > 0 && float64(linkCount)/float64(wordCount) > 0.3 {
 		indicatorCount++
 	}
-	
+
 	return indicatorCount >= 2
 }
 
 // DetectIssues detects quality issues in content
 func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []QualityIssue {
 	var issues []QualityIssue
-	
+
 	wordCount := len(strings.Fields(content.Content))
-	
+
 	// Check minimum word count
 	if wordCount < cqa.config.MinWordCount {
 		issues = append(issues, QualityIssue{
@@ -419,7 +419,7 @@ func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []Qualit
 			Description: "Content has fewer words than recommended minimum",
 		})
 	}
-	
+
 	// Check for missing title
 	if cqa.config.RequireTitle && (content.Title == "" || content.Title == "Untitled") {
 		issues = append(issues, QualityIssue{
@@ -428,7 +428,7 @@ func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []Qualit
 			Description: "Page is missing a title",
 		})
 	}
-	
+
 	// Check for empty content
 	if cqa.config.RequireContent && len(strings.TrimSpace(content.Content)) == 0 {
 		issues = append(issues, QualityIssue{
@@ -437,7 +437,7 @@ func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []Qualit
 			Description: "Page has no content",
 		})
 	}
-	
+
 	// Check blacklist patterns
 	text := strings.ToLower(content.Content)
 	blacklistFound := false
@@ -448,7 +448,7 @@ func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []Qualit
 			foundPatterns = append(foundPatterns, pattern)
 		}
 	}
-	
+
 	if blacklistFound {
 		description := "Content contains blacklisted pattern"
 		if len(foundPatterns) > 1 {
@@ -462,7 +462,7 @@ func (cqa *ContentQualityAnalyzer) DetectIssues(content ScrapedContent) []Qualit
 			Description: description,
 		})
 	}
-	
+
 	return issues
 }
 
@@ -472,67 +472,67 @@ func (cqa *ContentQualityAnalyzer) ShouldSkip(quality ContentQuality) bool {
 	if quality.Score < 0.3 { // Default minimum acceptable score
 		return true
 	}
-	
+
 	// Skip navigation pages if configured
 	if cqa.config.SkipNavigationPages && quality.IsNavigationPage {
 		return true
 	}
-	
+
 	// Skip if has critical issues
 	for _, issue := range quality.Issues {
 		if issue.Severity == "error" {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // generateTags generates tags based on content analysis
 func (cqa *ContentQualityAnalyzer) generateTags(content ScrapedContent, metrics ContentMetrics) []string {
 	var tags []string
-	
+
 	// Content type tags
 	if metrics.CodeBlockCount > 0 {
 		tags = append(tags, "technical")
 	}
-	
+
 	if metrics.WordCount > 1000 {
 		tags = append(tags, "long-form")
 	} else if metrics.WordCount < 200 {
 		tags = append(tags, "short-form")
 	}
-	
+
 	if metrics.HasHeaders {
 		tags = append(tags, "structured")
 	}
-	
+
 	// Quality tags
 	if metrics.WordCount >= 500 && metrics.CodeBlockCount >= 2 {
 		tags = append(tags, "comprehensive")
 	}
-	
+
 	if metrics.ContentRatio < 0.3 {
 		tags = append(tags, "low-content")
 	}
-	
+
 	return tags
 }
 
 // updateStats updates internal statistics
 func (cqa *ContentQualityAnalyzer) updateStats(quality ContentQuality) {
 	cqa.stats.TotalPages++
-	
+
 	if quality.Score >= 0.4 { // Default passing score
 		cqa.stats.PassedPages++
 	} else {
 		cqa.stats.FailedPages++
 	}
-	
+
 	// Update average score
 	totalScore := cqa.stats.AverageScore * float64(cqa.stats.TotalPages-1)
 	cqa.stats.AverageScore = (totalScore + quality.Score) / float64(cqa.stats.TotalPages)
-	
+
 	// Update average word count
 	totalWords := cqa.stats.AverageWordCount * (cqa.stats.TotalPages - 1)
 	cqa.stats.AverageWordCount = (totalWords + quality.WordCount) / cqa.stats.TotalPages
@@ -541,10 +541,10 @@ func (cqa *ContentQualityAnalyzer) updateStats(quality ContentQuality) {
 // GenerateReport generates a quality analysis report
 func (cqa *ContentQualityAnalyzer) GenerateReport() QualityReport {
 	return QualityReport{
-		Stats:       cqa.stats,
-		TopPages:    []PageQuality{},    // Would be populated with actual data
-		WorstPages:  []PageQuality{},    // Would be populated with actual data
-		CommonIssues: []IssueCount{},    // Would be populated with actual data
-		GeneratedAt: time.Now(),
+		Stats:        cqa.stats,
+		TopPages:     []PageQuality{}, // Would be populated with actual data
+		WorstPages:   []PageQuality{}, // Would be populated with actual data
+		CommonIssues: []IssueCount{},  // Would be populated with actual data
+		GeneratedAt:  time.Now(),
 	}
 }

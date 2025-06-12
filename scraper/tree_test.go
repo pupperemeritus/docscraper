@@ -7,13 +7,13 @@ import (
 
 func TestNewTreeBuilder(t *testing.T) {
 	config := TreeConfig{
-		BuildingStrategy:  "url_path",
-		UseURLHierarchy:   true,
-		SortChildren:      true,
-		SortBy:            SortByTitle,
-		SortOrder:         "asc",
-		AutoIndex:         true,
-		FallbackToRoot:    true,
+		BuildingStrategy: "url_path",
+		UseURLHierarchy:  true,
+		SortChildren:     true,
+		SortBy:           SortByTitle,
+		SortOrder:        "asc",
+		AutoIndex:        true,
+		FallbackToRoot:   true,
 	}
 
 	builder := NewTreeBuilder(config)
@@ -256,10 +256,10 @@ func TestDocumentTree_TraverseDepthFirst(t *testing.T) {
 	tree := &DocumentTree{
 		Root: root,
 		NodeMap: map[string]*DocumentNode{
-			"https://example.com/":           root,
-			"https://example.com/page1":      child1,
-			"https://example.com/page2":      child2,
-			"https://example.com/page1/sub":  grandchild,
+			"https://example.com/":          root,
+			"https://example.com/page1":     child1,
+			"https://example.com/page2":     child2,
+			"https://example.com/page1/sub": grandchild,
 		},
 	}
 
@@ -418,9 +418,9 @@ func TestDocumentTree_GetNodesByLevel(t *testing.T) {
 	tree := &DocumentTree{
 		Root: root,
 		NodeMap: map[string]*DocumentNode{
-			"https://example.com/":         root,
-			"https://example.com/page1":    level1Node1,
-			"https://example.com/page2":    level1Node2,
+			"https://example.com/":          root,
+			"https://example.com/page1":     level1Node1,
+			"https://example.com/page2":     level1Node2,
 			"https://example.com/page1/sub": level2Node,
 		},
 	}
@@ -495,7 +495,7 @@ func TestTreeBuilder_SortChildren(t *testing.T) {
 
 	expectedURLs := []string{
 		"https://example.com/apple",
-		"https://example.com/bear", 
+		"https://example.com/bear",
 		"https://example.com/zebra",
 	}
 	for i, expected := range expectedURLs {

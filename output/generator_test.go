@@ -326,7 +326,7 @@ func TestGenerator_Generate_UnsupportedFormat(t *testing.T) {
 
 func TestGenerator_Generate_CreateDirError(t *testing.T) {
 	cfg := &config.Config{
-		OutputDir:    "/root/forbidden",  // Directory that can't be created
+		OutputDir:    "/root/forbidden", // Directory that can't be created
 		OutputFormat: "markdown",
 		OutputType:   "single",
 	}
